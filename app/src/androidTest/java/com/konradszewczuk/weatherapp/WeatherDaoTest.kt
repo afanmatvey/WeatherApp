@@ -6,11 +6,9 @@ import android.support.test.runner.AndroidJUnit4
 import com.konradszewczuk.weatherapp.data.room.CityEntity
 import com.konradszewczuk.weatherapp.data.room.RoomDataSource
 import org.junit.After
-
-import org.junit.runner.RunWith
-
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -24,10 +22,10 @@ class WeatherDaoTest {
     @Before
     fun initDb() {
         database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
-                RoomDataSource::class.java)
-                // allowing main thread queries, just for testing
-                .allowMainThreadQueries()
-                .build()
+            RoomDataSource::class.java)
+            // allowing main thread queries, just for testing
+            .allowMainThreadQueries()
+            .build()
     }
 
     @After
@@ -35,12 +33,11 @@ class WeatherDaoTest {
         database.close()
     }
 
-
     @Test
     fun getNoCitiesWhenNoSearchedCityInserted() {
         database.weatherSearchCityDao().getAllCities()
-                .test()
-                .assertNoValues()
+            .test()
+            .assertNoValues()
     }
 
     @Test
@@ -50,16 +47,16 @@ class WeatherDaoTest {
         database.weatherSearchCityDao().insertCity(CityEntity(cityName = searchedCityName))
 
         val firstEmmission = database.weatherSearchCityDao().getAllCities()
-                .take(1)
-                .test()
+            .take(1)
+            .test()
 
         firstEmmission.awaitTerminalEvent()
 
         firstEmmission
-                .assertNoErrors()
-                .assertValue {
-                    it.size == 1 && it[0].cityName.equals(searchedCityName)
-                }
+            .assertNoErrors()
+            .assertValue {
+                it.size == 1 && it[0].cityName.equals(searchedCityName)
+            }
     }
 
 }
