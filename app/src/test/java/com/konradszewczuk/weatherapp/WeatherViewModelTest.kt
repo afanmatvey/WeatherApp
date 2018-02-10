@@ -63,7 +63,7 @@ class WeatherViewModelTest {
             .test()
             .assertNoErrors()
             .assertValue { list: List<CityEntity> ->
-                list.size == 1 && list[0].cityName.equals(searchedCityName)
+                list.size == 1 && list[0].cityName == searchedCityName
             }
 
         Mockito.verify<WeatherRepository>(weatherRepository).getCities()

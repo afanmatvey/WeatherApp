@@ -45,7 +45,7 @@ class WeatherCitySearchActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WeatherViewModel::class.java)
 
         val itemInputNameObservable = RxTextView.textChanges(autocomplete_textView)
-            .map { inputText: CharSequence -> inputText.isEmpty() || !isValidCityInput(inputText.toString()) }
+            .map { inputText -> inputText.isEmpty() || !isValidCityInput(inputText.toString()) }
             .distinctUntilChanged()
 
         compositeDisposable.add(setupTextInputObserver(itemInputNameObservable))
@@ -66,10 +66,10 @@ class WeatherCitySearchActivity : AppCompatActivity() {
     }
 
     private fun setupTextInputObserver(itemInputNameObservable: Observable<Boolean>): Disposable {
-        return itemInputNameObservable.subscribe { inputIsEmpty: Boolean ->
+        return itemInputNameObservable.subscribe { inputIsEmpty ->
             cityTextInputLayout.error = getString(R.string.invalid_input_message)
             cityTextInputLayout.isErrorEnabled = inputIsEmpty
-            cityButton?.isEnabled = !inputIsEmpty
+            cityButton.isEnabled = !inputIsEmpty
         }
     }
 

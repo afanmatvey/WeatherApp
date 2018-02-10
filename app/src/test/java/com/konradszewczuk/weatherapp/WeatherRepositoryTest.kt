@@ -96,8 +96,8 @@ class WeatherRepositoryTest {
             .test()
             .assertValue { citiesList: List<CityEntity> ->
                 citiesList.size == 2
-                    && citiesList[0].cityName.equals("Cracow")
-                    && citiesList[1].cityName.equals("Tokyo")
+                    && citiesList[0].cityName == "Cracow"
+                    && citiesList[1].cityName == "Tokyo"
             }
     }
 
@@ -112,8 +112,8 @@ class WeatherRepositoryTest {
 
         weatherRepository.getWeather(searchedCity).test()
             .assertNoErrors()
-            .assertValue { weatherDeatailsDTO: WeatherDetailsDTO ->
-                weatherDeatailsDTO == transformToWeatherDetailsDTO(locationResponse.results[0].formatted_address, weatherResponse)
+            .assertValue { weatherDetailsDTO: WeatherDetailsDTO ->
+                weatherDetailsDTO == transformToWeatherDetailsDTO(locationResponse.results[0].formatted_address, weatherResponse)
             }
 
         Mockito.verify<RemoteWeatherService>(remoteWeatherService).requestWeatherForCity(capture(stringLatitudeArgumentCaptor), capture(stringLongitudeArgumentCaptor))
@@ -189,35 +189,35 @@ class WeatherRepositoryTest {
             listOf("232"), listOf("343"), "3434", 123234L
         )
 
-        val addressMock = AddressComponent(
+        private val addressMock = AddressComponent(
             "Warsaw, Poland", "Warsaw", listOf("24234")
         )
 
-        val northEastBoundsMock = Northeast(
+        private val northEastBoundsMock = Northeast(
             34.34, 334.34
         )
 
-        val southEastBoundMock = Southwest(
+        private val southEastBoundMock = Southwest(
             343.34, 34.34
         )
 
-        val nortEastViewportMock = com.konradszewczuk.weatherapp.data.remote.locationModel.viewport.Northeast(
+        private val nortEastViewportMock = com.konradszewczuk.weatherapp.data.remote.locationModel.viewport.Northeast(
             34.34, 334.34
         )
 
-        val southWestViewportMock = com.konradszewczuk.weatherapp.data.remote.locationModel.viewport.Southwest(
+        private val southWestViewportMock = com.konradszewczuk.weatherapp.data.remote.locationModel.viewport.Southwest(
             34.34, 334.34
         )
 
-        val boundsMock = Bounds(
+        private val boundsMock = Bounds(
             northEastBoundsMock, southEastBoundMock
         )
 
-        val viewPortMock = Viewport(
+        private val viewPortMock = Viewport(
             nortEastViewportMock, southWestViewportMock
         )
 
-        val geometryMock = Geometry(
+        private val geometryMock = Geometry(
             boundsMock, Location(23.23, 232.23), "asda", viewPortMock
         )
 
