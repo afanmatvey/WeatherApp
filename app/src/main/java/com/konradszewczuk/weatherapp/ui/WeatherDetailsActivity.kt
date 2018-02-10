@@ -1,8 +1,8 @@
 package com.konradszewczuk.weatherapp.ui
 
 import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -14,9 +14,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.konradszewczuk.weatherapp.R
-import com.konradszewczuk.weatherapp.ui.adapters.WeeklyWeatherAdapter
 import com.konradszewczuk.weatherapp.domain.dto.WeatherDetailsDTO
 import com.konradszewczuk.weatherapp.domain.dto.WeeklyWeatherDTO
+import com.konradszewczuk.weatherapp.ui.adapters.WeeklyWeatherAdapter
 import com.konradszewczuk.weatherapp.utils.ChartFormatter
 import com.konradszewczuk.weatherapp.utils.StringFormatter.convertTimestampToDayAndHourFormat
 import com.konradszewczuk.weatherapp.utils.StringFormatter.convertToValueWithUnit
@@ -24,9 +24,18 @@ import com.konradszewczuk.weatherapp.utils.StringFormatter.unitDegreesCelsius
 import com.konradszewczuk.weatherapp.utils.StringFormatter.unitPercentage
 import com.konradszewczuk.weatherapp.utils.StringFormatter.unitsMetresPerSecond
 import com.konradszewczuk.weatherapp.utils.WeatherMathUtils.convertFahrenheitToCelsius
-import kotlinx.android.synthetic.main.activity_weather_details.*
+import kotlinx.android.synthetic.main.activity_weather_details.chartHourlyWeather
+import kotlinx.android.synthetic.main.activity_weather_details.recyclerViewWeeklyWeather
+import kotlinx.android.synthetic.main.activity_weather_details.textViewCloudCoverageValue
+import kotlinx.android.synthetic.main.activity_weather_details.textViewCurrentTemperature
+import kotlinx.android.synthetic.main.activity_weather_details.textViewCurrentTime
+import kotlinx.android.synthetic.main.activity_weather_details.textViewHumidityValue
+import kotlinx.android.synthetic.main.activity_weather_details.textViewWeatherSummary
+import kotlinx.android.synthetic.main.activity_weather_details.textViewWindSpeedValue
 import org.parceler.Parcels
-import java.util.*
+import java.util.ArrayList
+import java.util.Collections
+import java.util.Date
 
 class WeatherDetailsActivity : AppCompatActivity() {
 
@@ -55,13 +64,13 @@ class WeatherDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(weatherDetails: WeatherDetailsDTO) {
-        val weeklyWeatherList = weatherDetails.weeklyDayWeahterList as ArrayList<WeeklyWeatherDTO>
+        val weeklyWeatherList = weatherDetails.weeklyDayWeatherList as ArrayList<WeeklyWeatherDTO>
         val adapter: WeeklyWeatherAdapter? = WeeklyWeatherAdapter(weeklyWeatherList)
         val mLayoutManager = LinearLayoutManager(applicationContext)
-        recyclerViewWeeklyWeather.setLayoutManager(mLayoutManager)
-        recyclerViewWeeklyWeather.setItemAnimator(DefaultItemAnimator())
+        recyclerViewWeeklyWeather.layoutManager = mLayoutManager
+        recyclerViewWeeklyWeather.itemAnimator = DefaultItemAnimator()
         recyclerViewWeeklyWeather.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-        recyclerViewWeeklyWeather.setAdapter(adapter)
+        recyclerViewWeeklyWeather.adapter = adapter
     }
 
     private fun setupTemperatureTextColor(temperature: Double) {
@@ -78,7 +87,6 @@ class WeatherDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupHourlyChart(lineChart: LineChart, weatherDetailsDTO: WeatherDetailsDTO) {
-
         val entries = ArrayList<Entry>()
         val temperatureList = ArrayList<Int>()
 
@@ -99,8 +107,8 @@ class WeatherDetailsActivity : AppCompatActivity() {
         setYAxis(rightAxis, temperatureList)
 
         val downAxis = lineChart.xAxis
-        weatherDetailsDTO.hourlyWeatherStringFormatedHoursList?.let {
-            setXAxis(downAxis, weatherDetailsDTO.hourlyWeatherStringFormatedHoursList)
+        weatherDetailsDTO.hourlyWeatherStringFormattedHoursList?.let {
+            setXAxis(downAxis, weatherDetailsDTO.hourlyWeatherStringFormattedHoursList)
         }
 
         val lineData = LineData(lineDataSet)

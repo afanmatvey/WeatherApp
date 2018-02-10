@@ -12,11 +12,10 @@ import com.konradszewczuk.weatherapp.utils.StringFormatter.unitDegreesCelsius
 import com.konradszewczuk.weatherapp.utils.WeatherMathUtils.convertFahrenheitToCelsius
 import java.util.ArrayList
 
+class WeeklyWeatherAdapter(val list: ArrayList<WeeklyWeatherDTO>) : RecyclerView.Adapter<WeeklyWeatherAdapter.ViewHolder>() {
 
-class WeeklyWeatherAdapter(val list: ArrayList<WeeklyWeatherDTO>) : RecyclerView.Adapter<WeeklyWeatherAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent?.context)
-                .inflate(R.layout.item_weather_day, parent, false)
+        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.item_weather_day, parent, false)
         return ViewHolder(itemView)
     }
 
@@ -32,18 +31,11 @@ class WeeklyWeatherAdapter(val list: ArrayList<WeeklyWeatherDTO>) : RecyclerView
         holder?.textViewDayWeatherType?.text = item.weatherType
     }
 
-    class ViewHolder(view: View)  : RecyclerView.ViewHolder(view) {
-        var textViewDayMaxTemp : TextView
-        var textViewDayMinTemp: TextView
-        var textViewDayWeatherWeekDay: TextView
-        var textViewDayWeatherType: TextView
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var textViewDayMaxTemp: TextView = view.findViewById(R.id.textViewDayMaxTemp)
+        var textViewDayMinTemp: TextView = view.findViewById(R.id.textViewDayMinTemp)
+        var textViewDayWeatherWeekDay: TextView = view.findViewById(R.id.textViewDayWeatherWeekDay)
+        var textViewDayWeatherType: TextView = view.findViewById(R.id.textViewDayWeatherType)
 
-
-        init {
-            textViewDayMaxTemp = view.findViewById(R.id.textViewDayMaxTemp)
-            textViewDayMinTemp = view.findViewById(R.id.textViewDayMinTemp)
-            textViewDayWeatherWeekDay = view.findViewById(R.id.textViewDayWeatherWeekDay)
-            textViewDayWeatherType = view.findViewById(R.id.textViewDayWeatherType)
-        }
     }
 }

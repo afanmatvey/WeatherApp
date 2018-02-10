@@ -1,55 +1,52 @@
-<FrameLayout android:layout_width="match_parent"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_width="match_parent">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/app_background" />
 
     <LinearLayout
         android:id="@+id/inputLinearLayout"
         android:layout_gravity="center"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
-
+            android:gravity="center"
             android:id="@+id/cityTextInputLayout"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-
-            android:gravity="center">
+            android:layout_width="match_parent">
 
             <AutoCompleteTextView
+                android:hint="City"
                 android:id="@+id/autocomplete_textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
                 android:imeOptions="actionDone"
-                android:hint="City" />
-
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/cityButton"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:text="Show" />
-
     </LinearLayout>
 
     <ProgressBar
-        android:visibility="invisible"
         android:id="@+id/progressBar"
         android:layout_gravity="center"
+        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:visibility="invisible" />
 </FrameLayout>
 

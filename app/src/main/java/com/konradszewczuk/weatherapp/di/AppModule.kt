@@ -7,9 +7,10 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-
 @Module
-class AppModule(private val weatherApplication: WeatherApplication) {
+class AppModule(
+    private val weatherApplication: WeatherApplication
+) {
 
     @Provides
     @Singleton
@@ -17,7 +18,7 @@ class AppModule(private val weatherApplication: WeatherApplication) {
 
     @Provides
     @Singleton
-    fun provideViewModelFactory(weatherRepository: WeatherRepository): WeatherViewModelFactory{
+    fun provideViewModelFactory(weatherRepository: WeatherRepository): WeatherViewModelFactory {
         return WeatherViewModelFactory(weatherRepository)
     }
 

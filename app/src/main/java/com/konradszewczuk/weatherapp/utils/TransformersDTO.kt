@@ -4,10 +4,11 @@ import com.konradszewczuk.weatherapp.data.remote.weatherModel.WeatherResponse
 import com.konradszewczuk.weatherapp.domain.dto.HourlyWeatherDTO
 import com.konradszewczuk.weatherapp.domain.dto.WeatherDetailsDTO
 import com.konradszewczuk.weatherapp.domain.dto.WeeklyWeatherDTO
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
 
+object TransformersDTO {
 
-object TransformersDTO{
     fun transformToWeatherDetailsDTO(cityName: String, weatherResponse: WeatherResponse?): WeatherDetailsDTO {
         val temperatureFahrenheit: Double? = weatherResponse?.currently?.temperature
         val temperature = WeatherMathUtils.convertFahrenheitToCelsius(temperatureFahrenheit)
@@ -27,25 +28,25 @@ object TransformersDTO{
             hourlyWeatherList.add(HourlyWeatherDTO(it.time.toLong(), it.temperature))
         }
 
-        var hourlyWeatherStringFormatedHoursList = ArrayList<String>()
+        var hourlyWeatherStringFormattedHoursList = ArrayList<String>()
 
         //temperature for only next 24hours
-        if(hourlyWeatherList.size > 24){
-            hourlyWeatherStringFormatedHoursList = (0..24).mapTo(ArrayList<String>()) {
+        if (hourlyWeatherList.size > 24) {
+            hourlyWeatherStringFormattedHoursList = (0..24).mapTo(ArrayList()) {
                 StringFormatter.convertTimestampToHourFormat(timestamp = hourlyWeatherList[it].timestamp, timeZone = weatherResponse?.timezone)
             }
         }
 
         return WeatherDetailsDTO(
-                cityName = cityName,
-                weatherSummary = weatherSummary,
-                temperature = temperature,
-                windSpeed = windSpeed,
-                humidity = humidity?.let { it * 100 },
-                cloudsPercentage = cloudCoverPercentage?.let { it * 100 },
-                weeklyDayWeahterList = weeklyWeatherList,
-                hourlyWeatherList = hourlyWeatherList,
-                hourlyWeatherStringFormatedHoursList = hourlyWeatherStringFormatedHoursList
+            cityName = cityName,
+            weatherSummary = weatherSummary,
+            temperature = temperature,
+            windSpeed = windSpeed,
+            humidity = humidity?.let { it * 100 },
+            cloudsPercentage = cloudCoverPercentage?.let { it * 100 },
+            weeklyDayWeatherList = weeklyWeatherList,
+            hourlyWeatherList = hourlyWeatherList,
+            hourlyWeatherStringFormattedHoursList = hourlyWeatherStringFormattedHoursList
         )
     }
 }

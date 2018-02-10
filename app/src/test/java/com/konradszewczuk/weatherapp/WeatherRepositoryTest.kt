@@ -3,7 +3,11 @@ package com.konradszewczuk.weatherapp
 import com.konradszewczuk.weatherapp.data.remote.RemoteGeocodingService
 import com.konradszewczuk.weatherapp.data.remote.RemoteWeatherDataSource
 import com.konradszewczuk.weatherapp.data.remote.RemoteWeatherService
-import com.konradszewczuk.weatherapp.data.remote.locationModel.*
+import com.konradszewczuk.weatherapp.data.remote.locationModel.AddressComponent
+import com.konradszewczuk.weatherapp.data.remote.locationModel.Geometry
+import com.konradszewczuk.weatherapp.data.remote.locationModel.Location
+import com.konradszewczuk.weatherapp.data.remote.locationModel.LocationResponse
+import com.konradszewczuk.weatherapp.data.remote.locationModel.Result
 import com.konradszewczuk.weatherapp.data.remote.locationModel.bounds.Bounds
 import com.konradszewczuk.weatherapp.data.remote.locationModel.bounds.Northeast
 import com.konradszewczuk.weatherapp.data.remote.locationModel.bounds.Southwest
@@ -29,7 +33,11 @@ import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.*
+import org.mockito.ArgumentCaptor
+import org.mockito.Captor
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -60,7 +68,6 @@ class WeatherRepositoryTest {
 
     private lateinit var weatherRepository: WeatherRepository
 
-
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
@@ -69,7 +76,6 @@ class WeatherRepositoryTest {
         Mockito.`when`(roomDataSource.weatherSearchCityDao()).thenReturn(weatherSearchCityDao)
     }
 
-
     @Test
     fun testNoCitiesReturned_whenNoCitiesSaved() {
         // Given that the RoomDataSource returns an empty list of cities
@@ -77,8 +83,8 @@ class WeatherRepositoryTest {
 
         //When getting the active shopping lists
         weatherRepository.getCities()
-                .test()
-                .assertNoValues()
+            .test()
+            .assertNoValues()
     }
 
     @Test
@@ -87,12 +93,12 @@ class WeatherRepositoryTest {
 
 
         weatherRepository.getCities()
-                .test()
-                .assertValue { citiesList: List<CityEntity> ->
-                    citiesList.size == 2
-                            && citiesList[0].cityName.equals("Cracow")
-                            && citiesList[1].cityName.equals("Tokyo")
-                }
+            .test()
+            .assertValue { citiesList: List<CityEntity> ->
+                citiesList.size == 2
+                    && citiesList[0].cityName.equals("Cracow")
+                    && citiesList[1].cityName.equals("Tokyo")
+            }
     }
 
     @Test
@@ -105,10 +111,10 @@ class WeatherRepositoryTest {
         Mockito.`when`(remoteWeatherService.requestWeatherForCity(weatherResponse.latitude.toString(), weatherResponse.longitude.toString())).thenReturn(Single.just(weatherResponse))
 
         weatherRepository.getWeather(searchedCity).test()
-                .assertNoErrors()
-                .assertValue { weatherDeatailsDTO: WeatherDetailsDTO ->
-                    weatherDeatailsDTO == transformToWeatherDetailsDTO(locationResponse.results[0].formatted_address, weatherResponse)
-                }
+            .assertNoErrors()
+            .assertValue { weatherDeatailsDTO: WeatherDetailsDTO ->
+                weatherDeatailsDTO == transformToWeatherDetailsDTO(locationResponse.results[0].formatted_address, weatherResponse)
+            }
 
         Mockito.verify<RemoteWeatherService>(remoteWeatherService).requestWeatherForCity(capture(stringLatitudeArgumentCaptor), capture(stringLongitudeArgumentCaptor))
 
@@ -117,7 +123,7 @@ class WeatherRepositoryTest {
     }
 
     @Test
-    fun testAddCity_insertsCityEntityToDatabase(){
+    fun testAddCity_insertsCityEntityToDatabase() {
         val insertedCityName = "Cracow"
 
         weatherRepository.addCity(insertedCityName)
@@ -133,91 +139,90 @@ class WeatherRepositoryTest {
     //MOCKS FOR REMOTE API RETURNED OBJECTS
     companion object {
         val currentlyMock = Currently(
-                1515707975,
-                "Mostly Cloudy ",
-                "partly-cloudy-night",
-                181,
-                315,
-                0.0,
-                0.0,
-                50.65,
-                50.65,
-                44.9,
-                0.81,
-                1026.14,
-                6.12,
-                11.09,
-                211,
-                0.63,
-                0,
-                7.52,
-                273.79
+            1515707975,
+            "Mostly Cloudy ",
+            "partly-cloudy-night",
+            181,
+            315,
+            0.0,
+            0.0,
+            50.65,
+            50.65,
+            44.9,
+            0.81,
+            1026.14,
+            6.12,
+            11.09,
+            211,
+            0.63,
+            0,
+            7.52,
+            273.79
         )
         val minutelyMock = Minutely(
-                "Mostly cloudy for the hour",
-                "partly-cloudy-night",
-                listOf(Data(2, 3.3, 3.4))
+            "Mostly cloudy for the hour",
+            "partly-cloudy-night",
+            listOf(Data(2, 3.3, 3.4))
         )
 
         val hourlyMock = Hourly(
-                "Mostly cloudy for the hour",
-                "partly-cloudy-night",
-                listOf(com.konradszewczuk.weatherapp.data.remote.weatherModel.hourly.Data(
-                        1515704400,
-                        "Partly Cloudy  ",
-                        "partly-cloudy-day   ",
-                        2.3, 3.34, 3.34, 2.23, 32.23, 23.23, 23.23, 232.23, 23.23, 23, 23.23, 232, 232.23, 23.23)
-                )
+            "Mostly cloudy for the hour",
+            "partly-cloudy-night",
+            listOf(com.konradszewczuk.weatherapp.data.remote.weatherModel.hourly.Data(
+                1515704400,
+                "Partly Cloudy  ",
+                "partly-cloudy-day   ",
+                2.3, 3.34, 3.34, 2.23, 32.23, 23.23, 23.23, 232.23, 23.23, 23, 23.23, 232, 232.23, 23.23)
+            )
         )
 
         val dailyMock = Daily(
-                "3434", "34",
-                listOf(com.konradszewczuk.weatherapp.data.remote.weatherModel.daily.Data(23, "232", "232", 34, 34, 34.34, 343.34, 343.3, 34, 343.3, "34", 343.3, 34, 343.3, 34, 343.3, 3434, 343.3, 343, 343.3, 343.3, 343.3, 343.3, 343.3, 343, 343, 343.3, 343, 3434, 343.3, 343.3, 343.3, 3433, 343.3, 343, 343.3, 3434, 343.3, 3434))
+            "3434", "34",
+            listOf(com.konradszewczuk.weatherapp.data.remote.weatherModel.daily.Data(23, "232", "232", 34, 34, 34.34, 343.34, 343.3, 34, 343.3, "34", 343.3, 34, 343.3, 34, 343.3, 3434, 343.3, 343, 343.3, 343.3, 343.3, 343.3, 343.3, 343, 343, 343.3, 343, 3434, 343.3, 343.3, 343.3, 3433, 343.3, 343, 343.3, 3434, 343.3, 3434))
         )
 
         val alertMock = Alert(
-                "test", listOf("asd"), "sds", 3434, 3434, "asd", "343"
+            "test", listOf("asd"), "sds", 3434, 3434, "asd", "343"
         )
 
         val flagsMock = Flags(
-                listOf("232"), listOf("343"), "3434", 123234L
+            listOf("232"), listOf("343"), "3434", 123234L
         )
 
         val addressMock = AddressComponent(
-                "Warsaw, Poland", "Warsaw", listOf("24234")
+            "Warsaw, Poland", "Warsaw", listOf("24234")
         )
 
         val northEastBoundsMock = Northeast(
-                34.34, 334.34
+            34.34, 334.34
         )
 
         val southEastBoundMock = Southwest(
-                343.34, 34.34
+            343.34, 34.34
         )
 
         val nortEastViewportMock = com.konradszewczuk.weatherapp.data.remote.locationModel.viewport.Northeast(
-                34.34, 334.34
+            34.34, 334.34
         )
 
-
         val southWestViewportMock = com.konradszewczuk.weatherapp.data.remote.locationModel.viewport.Southwest(
-                34.34, 334.34
+            34.34, 334.34
         )
 
         val boundsMock = Bounds(
-                northEastBoundsMock, southEastBoundMock
+            northEastBoundsMock, southEastBoundMock
         )
 
         val viewPortMock = Viewport(
-                nortEastViewportMock, southWestViewportMock
+            nortEastViewportMock, southWestViewportMock
         )
 
         val geometryMock = Geometry(
-                boundsMock, Location(23.23, 232.23), "asda", viewPortMock
+            boundsMock, Location(23.23, 232.23), "asda", viewPortMock
         )
 
         val resultMock = Result(
-                listOf(addressMock), "Address", geometryMock, "34", listOf("34")
+            listOf(addressMock), "Address", geometryMock, "34", listOf("34")
         )
 
     }

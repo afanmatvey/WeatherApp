@@ -5,7 +5,6 @@ import com.konradszewczuk.weatherapp.domain.dto.WeatherDetailsDTO
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-
 interface WeatherRepository {
 
     fun getCities(): Flowable<List<CityEntity>>

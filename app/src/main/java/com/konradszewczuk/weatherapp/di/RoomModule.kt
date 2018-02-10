@@ -6,12 +6,10 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-
 @Module
 class RoomModule {
 
     @Provides
     @Singleton
-    fun provideRoomCurrencyDataSource(context: Context) =
-            RoomDataSource.getInstance(context)
+    fun provideRoomCurrencyDataSource(context: Context) = RoomDataSource.getInstance(context)
 }

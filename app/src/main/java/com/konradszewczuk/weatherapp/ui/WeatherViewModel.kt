@@ -5,8 +5,10 @@ import com.konradszewczuk.weatherapp.data.repository.WeatherRepository
 
 import javax.inject.Inject
 
-
-class WeatherViewModel @Inject constructor(val weatherRepository: WeatherRepository) : ViewModel() {
+class WeatherViewModel
+@Inject constructor(
+    private val weatherRepository: WeatherRepository
+) : ViewModel() {
 
     fun getWeather(cityName: String) = weatherRepository.getWeather(cityName)
 

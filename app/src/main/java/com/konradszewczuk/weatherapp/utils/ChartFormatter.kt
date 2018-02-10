@@ -9,13 +9,11 @@ import com.konradszewczuk.weatherapp.utils.StringFormatter.convertToValueWithUni
 import com.konradszewczuk.weatherapp.utils.StringFormatter.unitDegrees
 import java.util.ArrayList
 
+object ChartFormatter {
 
-object ChartFormatter{
-    class AxisValueFormatter(val values: ArrayList<String>) : IAxisValueFormatter {
+    class AxisValueFormatter(private val values: ArrayList<String>) : IAxisValueFormatter {
 
-        override fun getFormattedValue(value: Float, axis: AxisBase): String {
-            return values[value.toInt()]
-        }
+        override fun getFormattedValue(value: Float, axis: AxisBase) = values[value.toInt()]
     }
 
     class ValueFormatter : IValueFormatter {

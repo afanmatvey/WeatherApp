@@ -9,11 +9,14 @@ import com.konradszewczuk.weatherapp.ui.WeatherViewModel
 import io.reactivex.Flowable
 import io.reactivex.Single
 import junit.framework.Assert.assertEquals
-
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.*
+import org.mockito.ArgumentCaptor
+import org.mockito.Captor
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -36,7 +39,7 @@ class WeatherViewModelTest {
     }
 
     @Test
-    fun testGetWeather_fetchWeatherFromRepository(){
+    fun testGetWeather_fetchWeatherFromRepository() {
         val searchedCityName = "Cracow"
         val weatherDetailsDTO = WeatherDetailsDTO(searchedCityName, "Summary", 23.23, 23.23, 12.42, 15.2, weeklyWeatherDtoArray, hourlyWeatherDtoArray, hourlyFormatedStrings)
 
@@ -50,24 +53,24 @@ class WeatherViewModelTest {
     }
 
     @Test
-    fun testGetCities_fetchCitiesFromRepository(){
+    fun testGetCities_fetchCitiesFromRepository() {
         val searchedCityName = "Cracow"
 
         Mockito.`when`(weatherRepository.getCities()).thenReturn(Flowable.just(listOf(CityEntity(cityName = searchedCityName))))
 
         weatherViewModel.getCities()
-                .firstElement()
-                .test()
-                .assertNoErrors()
-                .assertValue{
-                    list: List<CityEntity> -> list.size == 1 && list[0].cityName.equals(searchedCityName)
-                }
+            .firstElement()
+            .test()
+            .assertNoErrors()
+            .assertValue { list: List<CityEntity> ->
+                list.size == 1 && list[0].cityName.equals(searchedCityName)
+            }
 
         Mockito.verify<WeatherRepository>(weatherRepository).getCities()
     }
 
     @Test
-    fun testAddCity_addsCityToRepository(){
+    fun testAddCity_addsCityToRepository() {
         val searchedCityName = "Cracow"
 
         weatherViewModel.addCity(searchedCityName)
@@ -76,7 +79,6 @@ class WeatherViewModelTest {
 
         assertEquals(searchedCityName, stringCityNameArgumentCaptor.value)
     }
-
 
     companion object {
         val weeklyWeatherDTO = WeeklyWeatherDTO("34", "12", "Monday", "Rainy")
