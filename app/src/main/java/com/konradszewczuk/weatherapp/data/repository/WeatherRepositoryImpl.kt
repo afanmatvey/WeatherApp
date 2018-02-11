@@ -1,7 +1,6 @@
 package com.konradszewczuk.weatherapp.data.repository
 
 import com.konradszewczuk.weatherapp.data.remote.RemoteWeatherDataSource
-import com.konradszewczuk.weatherapp.data.remote.locationModel.LocationResponse
 import com.konradszewczuk.weatherapp.data.room.CityEntity
 import com.konradszewczuk.weatherapp.data.room.RoomDataSource
 import com.konradszewczuk.weatherapp.domain.dto.WeatherDetailsDTO
@@ -21,17 +20,15 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override fun getWeather(cityName: String): Single<WeatherDetailsDTO> {
         return remoteWeatherDataSource.requestCityAddressByName(cityName)
-            .flatMap({ locationResponse: LocationResponse ->
-                val first = locationResponse.results.first()
-                val location = first.geometry.location
-
+            .map {
+                val result = it.results.first()
+                return@map Pair(result.geometry.location, result.formatted_address)
+            }
+            .flatMap { (location, address) ->
                 return@flatMap remoteWeatherDataSource.requestWeatherForCity(location.lat.toString(), location.lng.toString())
-                    .map { weatherResponse ->
-                        TransformersDTO.transformToWeatherDetailsDTO(first.formatted_address, weatherResponse)
-                    }
-            })
+                    .map { TransformersDTO.transformToWeatherDetailsDTO(address, it) }
+            }
             .retry(1)
-
     }
 
     override fun getCities(): Flowable<List<CityEntity>> {
